@@ -1,6 +1,9 @@
 import { getAllPostsMeta, getPost } from "@/data/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeMathJax from "rehype-mathjax";
 import overnight from "overnight/themes/Overnight-Slumber.json";
 import { sans } from "@/fonts/fonts";
 import "./markdown.css";
@@ -58,9 +61,12 @@ export default async function PostPage({
           options={{
             parseFrontmatter: true,
             mdxOptions: {
+              remarkPlugins: [remarkMath],
               rehypePlugins: [
                 [
                   // @ts-ignore
+                  rehypeKatex,
+                  rehypeMathJax,
                   rehypePrettyCode,
                   {
                     theme: overnight,
