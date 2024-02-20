@@ -5,6 +5,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { sans } from "@/fonts/fonts";
 import "./markdown.css";
+import { getPostWords, readingTime } from "@/lib/utils";
 
 export async function generateStaticParams() {
   const metas = await getAllPostsMeta();
@@ -31,6 +32,9 @@ export default async function PostPage({
     }
   }
 
+  const words = getPostWords(post.content);
+  const readTime = readingTime(words);
+
   return (
     <article>
       <h1
@@ -41,12 +45,19 @@ export default async function PostPage({
       >
         {post.meta.title}
       </h1>
-      <p className="mt-2 text-[13px] text-gray-700 dark:text-gray-300">
+      <p className="mb-6 mt-2 text-[13px] text-gray-700 dark:text-gray-300">
         {new Date(post.meta.date).toLocaleDateString("cn", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
         })}
+      </p>
+
+      <p className="mt-2 text-[13px] text-gray-700 dark:text-gray-300">
+        字数：{words}
+      </p>
+      <p className="mt-2 text-[13px] text-gray-700 dark:text-gray-300">
+        预计阅读时间：{readTime}分钟
       </p>
       <div className="markdown mt-10">
         <MDXRemote
