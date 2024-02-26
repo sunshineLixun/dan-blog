@@ -1,10 +1,10 @@
 ---
-title: "Nextjs + tailwindcss 实现 大神 dan 一模一样的博客"
+title: Nextjs + tailwindcss 实现 大神 dan 一模一样的博客
 date: "2024-02-23"
-spoiler: "Nextjs + tailwindcss 实战"
+spoiler: Nextjs + tailwindcss 实战
 ---
 
-大神 [dan](https://overreacted.io/) 的博客相信大家都看过，博客质量那是不用多说，懂的都懂。 说到博客样式，我比较喜欢这种简约风。其中博客中还支持组件交互效果。 所以我决定用 Nextjs + tailwindcss 实现一模一样的博客。
+大神 [dan](https://overreacted.io/) 的博客相信大家都看过，博客质量那是不用多说，懂的都懂。 说到博客样式，我比较喜欢这种简约风。其中博客中还支持组件交互效果。 所以我决定用 Nextjs + tailwindcss 实现一模一样的博客学习下。
 
 技术选型:
 
@@ -16,15 +16,15 @@ spoiler: "Nextjs + tailwindcss 实战"
 
 - vercel
 
-项目文件结构：
+## 项目文件结构：
 
-```tsx
+```
 |-- dan-blog
     |-- app
     |   |-- favicon.ico
     |   |-- globals.css
     |   |-- layout.tsx
-    |   |-- page.tsx
+    |   |-- page.tsx          博客列表(首页)
     |   |-- [slug]            博客详情
     |       |-- layout.tsx
     |       |-- markdown.css
@@ -37,9 +37,9 @@ spoiler: "Nextjs + tailwindcss 实战"
     |   |-- homeLink
     |       |-- homeLink.tsx  顶部导航
     |-- data
-    |   |-- post.ts
+    |   |-- post.ts           处理博客数据(博客列表、博客详情)
     |-- fonts
-    |   |-- fonts.ts
+    |   |-- fonts.ts          全局字体
     |-- lib
     |   |-- utils.ts
     |-- posts                 写博客的地方
@@ -68,6 +68,8 @@ spoiler: "Nextjs + tailwindcss 实战"
 nextjs的服务端组件能够很好的支持这种需求。我们可以通过服务端组件来读取文件，然后渲染到页面上。
 
 在编写代码之前，你需要了解下nextjs基本工作原理，app router工作原理，以及动态路由工作原理。这样你才能更好的理解下面的代码。
+
+## 博客列表
 
 layout文件代码(src/app/layout.tsx)
 
@@ -149,11 +151,13 @@ export default async function BlogList() {
 }
 ```
 
-接下来就需要获取博客列表数据，新建data文件夹(src/app/data/post.ts)，这里集中处理读取博客文章详情。
+接下来就需要获取博客列表数据，新建data文件夹(src/app/data/post.ts)，这里集中处理读取博客内容，获取到博客列表信息，和博客详情。可以理解为数据库操作。
 
 读取全部文章数据：
 
 ```js
+const rootDirectory = path.join(process.cwd(), "src", "posts");
+
 export const getAllPostsMeta = async () => {
   // 获取到src/posts/下所有文件
   const dirs = fs
@@ -281,6 +285,8 @@ function PostTitle({ post }: { post: PostDetail }) {
 }
 
 ```
+
+## 博客详情
 
 首页博客列表实现完了，接下来就是博客详情页面，渲染mdx文件内容，首推nextjs官方的MDXRemote组件，最重要的就是它支持引入自己编写的组件，这样就可以实现博客中的组件交互效果。
 
